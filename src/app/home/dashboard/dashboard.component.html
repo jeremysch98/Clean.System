@@ -1,0 +1,118 @@
+<div class="container-fluid">
+  <div class="row">
+    <!-- SIDEBAR -->
+    <div class="col-1 sidebar text-center">
+      <img class="w-75 mt-3" src="../../../assets/img/logo-fs.png" alt="logo">
+      <div class="row mt-5">
+        <div class="col-12">
+          <a [href]="'home/dashboard'">
+            <i class="icon-sidebar fa-solid fa-chart-pie"></i>
+          </a>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-12">
+          <a [href]="'home/products'">
+            <i class="icon-sidebar fa-solid fa-burger"></i>
+          </a>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-12">
+          <i class="icon-sidebar fa-solid fa-tags"></i>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-12">
+          <i class="icon-sidebar fa-solid fa-cart-shopping"></i>
+        </div>
+      </div>
+    </div>
+    <!-- CONTENT -->
+    <div class="col-11 main-content">
+      <div class="row navbar-content">
+        <nav class="navbar navbar-light">
+          <div class="container-fluid">
+            <a class="navbar-brand title-h4" [href]="'home/dashboard'">Dashboard</a>
+          </div>
+        </nav>
+      </div>
+      <div class="row content p-3">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="card card-indicator">
+                <div class="row">
+                  <div class="col-md-8 offset-md-2">
+                    <div class="row mt-4 text-center">
+                      <div class="col-3">
+                        <p class="soles">S/.</p>
+                      </div>
+                      <div class="col-9">
+                        <p class="mount">21400</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 offset-md-3">
+                        <div class="card bg-indicator-percentage text-center align-middle">
+                          <p class="indicator-percentage">+2.2%</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-3">
+                      <div class="indicator-description text-center">
+                        VENTAS DEL MES
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card card-indicator">
+                <div class="indicator-description text-center">
+                  CALORÍAS PROMEDIO
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card card-indicator">
+                <div class="row">
+                  <div class="col-md-8 offset-md-2">
+                    <div class="row mt-4 text-center">
+                      <p class="mount">870</p>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 offset-md-3">
+                        <div class="card bg-indicator-order text-center align-middle">
+                          <p class="indicator-percentage">-1.5%</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-3">
+                      <div class="indicator-description text-center">
+                        ÓRDENES DEL MES
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-5">
+              <div class="card card-indicator-table">
+                Ventas por producto
+              </div>
+            </div>
+            <div class="col-7">
+              <div class="card card-indicator-table">
+                Ventas por categoría
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

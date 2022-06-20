@@ -1,0 +1,29 @@
+.login-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-banner, .login-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-banner {
+    background: var(--red-color);
+}
+
+.b-login {
+    background: var(--red-color);
+    color: var(--white);
+    height: 57px;
+    border-radius: 10px;
+}
+
+.b-login:hover {
+    background: var(--red-color);
+    color: var(--white);
+}

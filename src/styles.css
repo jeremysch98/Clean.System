@@ -1,0 +1,209 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+/*NGX-DATATABLE*/
+@import '~@swimlane/ngx-datatable/index.css';
+@import '~@swimlane/ngx-datatable/themes/material.css';
+@import '~@swimlane/ngx-datatable/assets/icons.css';
+
+/*COLORS*/
+:root {
+    --white: #fff;
+    --red-color: #C12A33;
+    --red-color-light: #EE767D;
+    --grey-light: #B5B5C7;
+    --grey-more-light: #F5F8FA;
+    --grey: #888888;
+    --grey-background: #EFF1F5;
+    --turquoise: #00D9D9;
+    --pink: #F1416C;
+}
+
+/*FONT-WEIGHTS*/
+:root {
+    --light: 300;
+    --regular: 400;
+    --medium: 500;
+    --bold: 700;
+}
+
+/*LETTER COLOR*/
+.l-red {
+    color: var(--red-color);
+}
+
+.l-grey-light {
+    color: var(--grey-light);
+}
+
+/*TITLES*/
+.title-h1 {
+    font-size: 30px;
+    font-weight: var(--medium);
+}
+
+.title-h2 {
+    font-size: 24px;
+    font-weight: var(--medium);
+}
+
+.title-h4 {
+    font-size: 16px;
+    font-weight: var(--medium);
+}
+
+/*OTHERS*/
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--red-color);
+}
+
+/*INPUTS*/
+.i-text-normal {
+    background: var(--grey-more-light);
+    border: none;
+    height: 57px;
+    border-radius: 10px;
+}
+
+.i-text-modal {
+    background: var(--grey-more-light);
+    border: none;
+    border-radius: 10px;
+}
+
+/*BUTTONS*/
+
+
+/*FONT AWESOME ICONS*/
+.icon-sidebar {
+    font-size: 22px;
+    color: var(--white);
+}
+
+/*SIDEBAR*/
+.sidebar {
+    height: 100vh;
+    background: var(--red-color);
+}
+
+/*NAVBAR*/
+.navbar {
+    background: var(--white);
+    height: 80px;
+}
+
+.navbar-brand {
+    color: var(--grey) !important;
+}
+
+/*MAIN CONTENT*/
+.main-content {
+    background: var(--grey-background);
+}
+
+
+/*TOOLBAR TABLE*/
+.btn-add {
+    border: none;
+    background: var(--red-color);
+    color: var(--white);
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.btn-add:hover {
+    color: var(--red-color-light);
+}
+
+.input-search {
+    border-radius: 5px;
+    border: none;
+    color: var(--grey);
+    background: var(--grey-more-light);
+    font-size: 14px;
+}
+
+/*CARD TABLE*/
+.card-table {
+    border-radius: 10px;
+    border: none;
+}
+
+.header-table {
+    font-size: 15px;
+    color: var(--grey);
+    font-weight: var(--medium);
+}
+
+.data-table {
+    font-size: 14px;
+    font-weight: var(--medium);
+}
+
+.img-table {
+    height: 50px;
+    width: 50px;
+}
+
+.input-select {
+    height: 17px;
+    width: 17px;
+    border: none;
+    background: var(--grey-more-light);
+}
+
+.bnt-action-table {
+    font-size: 13px;
+}
+
+.btn-delete {
+    color: var(--red-color);
+}
+
+.btn-delete:hover {
+    color: var(--red-color);
+}
+
+.page-size-select {
+    background: var(--grey-more-light);
+    border: none;
+    width: 50px;
+    color: var(--grey);
+}
+
+.my-pagination {
+    color: var(--grey);
+}
+
+.my-pagination .ngx-pagination .current {
+    background: var(--red-color);
+    color: var(--white);
+    border-radius: 5px;
+}
+
+/*MODAL*/
+.modal-content {
+    border: none;
+    border-radius: 10px;
+}
+
+.btn-agregar {
+    background: var(--red-color);
+    color: var(--white);
+}
+
+.btn-agregar:hover {
+    color: var(--red-color-light);
+}
+
+.btn-cancelar {
+    background: var(--white);
+    border-color: var(--red-color);
+}

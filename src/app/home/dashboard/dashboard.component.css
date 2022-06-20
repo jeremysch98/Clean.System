@@ -1,0 +1,49 @@
+.fa-chart-pie {
+    color: var(--red-color-light) !important;
+}
+
+.card {
+    border-radius: 10px;
+    border: none
+}
+.card-indicator {
+    height: 200px;
+}
+
+.soles {
+    font-size: 18px;
+    font-weight: var(--regular);
+    color: var(--grey);
+}
+
+.mount {
+    font-size: 40px;
+    font-weight: var(--medium);
+}
+
+.bg-indicator-percentage {
+    background: var(--turquoise);
+    border: none;
+    height: 35px;
+}
+
+.indicator-percentage {
+    color: var(--white);
+    font-size: 20px;
+}
+
+.indicator-description {
+    font-size: 18px;
+    font-weight: var(--medium);
+    color: var(--grey);
+}
+
+.bg-indicator-order {
+    background: var(--pink);
+    border: none;
+    height: 35px;
+}
+
+.card-indicator-table {
+    height: 550px;
+}

@@ -1,0 +1,287 @@
+<div class="container-fluid">
+    <div class="row">
+        <!-- SIDEBAR -->
+        <div class="col-1 sidebar text-center">
+            <img class="w-75 mt-3" src="../../../assets/img/logo-fs.png" alt="logo">
+            <div class="row mt-5">
+                <div class="col-12">
+                    <a [href]="'home/dashboard'">
+                        <i class="icon-sidebar fa-solid fa-chart-pie"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <a [href]="'home/products'">
+                        <i class="icon-sidebar fa-solid fa-burger"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <i class="icon-sidebar fa-solid fa-tags"></i>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <i class="icon-sidebar fa-solid fa-cart-shopping"></i>
+                </div>
+            </div>
+        </div>
+        <!-- CONTENT -->
+        <div class="col-11 main-content">
+            <div class="row navbar-content">
+                <nav class="navbar navbar-light">
+                    <div class="container-fluid">
+                        <a class="navbar-brand title-h4" [href]="'home/products'">{{title_navbar}}</a>
+                    </div>
+                </nav>
+            </div>
+            <div class="row content p-4">
+                <div class="container">
+                    <div class="row">
+                        <div class="card card-table">
+                            <div class="row p-3 mt-2">
+                                <div class="col-5">
+                                    <p class="title-h2">Productos</p>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <div class="search-filter">
+                                            <input type="text" class="form-control input-search"
+                                                placeholder="Buscar producto" [(ngModel)]="gridFilter">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <a type="button" data-bs-toggle="modal"
+                                                (click)="ShowModal('create', modaladd)"
+                                                class="btn btn-add form-control"><i class="fa-solid fa-circle-plus"></i>
+                                                Agregar</a>
+                                        </div>
+                                        <!-- <div class="col-4">
+                                            <a type="button" class="btn btn-add form-control"
+                                                (click)="ShowModal('update', modaladd)"><i class="fa-solid fa-pen"></i>
+                                                Editar</a>
+                                        </div>
+                                        <div class="col-4">
+                                            <a type="button" class="btn btn-add form-control"><i
+                                                    class="fa-solid fa-trash"></i> Eliminar</a>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row p-3">
+                                <div class="col-12">
+                                    <!-- <ngx-datatable class="material table-test" [columnMode]="ColumnMode.force"
+                                        [rows]="products">
+                                        <ngx-datatable-column name="" [width]="10">
+                                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="flexRadio"
+                                                        [(ngModel)]="checkedValue" value="{{ row._id }}"
+                                                        (change)="SelectRow(row)"/>
+                                                </div>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="IMAGEN" prop="imagenUrl" [width]="250"
+                                            [canAutoResize]="false" [resizeable]="true" [sortable]="false">
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="TIPO" prop="tipo" [width]="250"
+                                            [canAutoResize]="false" [resizeable]="true" [sortable]="false">
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="PRODUCTO" prop="nombre" [width]="250"
+                                            [canAutoResize]="false" [resizeable]="true" [sortable]="false">
+                                        </ngx-datatable-column>
+                                    </ngx-datatable> -->
+                                    <table class="table table-responsive text-center">
+                                        <thead>
+                                            <tr class="align-middle">
+                                                <th>
+                                                    <p class="header-table" sortable="name">PRODUCTO</p>
+                                                </th>
+                                                <th>
+                                                    <p class="header-table">IMAGEN</p>
+                                                </th>
+                                                <th>
+                                                    <p class="header-table">TIPO</p>
+                                                </th>
+                                                <th>
+                                                    <p class="header-table">PRECIO (S/.)</p>
+                                                </th>
+                                                <th>
+                                                    <p class="header-table">CALORÍAS (gr)</p>
+                                                </th>
+                                                <th>
+                                                    <p class="header-table">CARBOHIDRATOS (gr)</p>
+                                                </th>
+                                                <th>
+                                                    <p class="header-table">PROTEINAS (gr)</p>
+                                                </th>
+                                                <th>
+                                                    <p class="header-table">STOCK</p>
+                                                </th>
+                                                <th>
+
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let p of products | filter:gridFilter | paginates:page_size:page_number | paginate: {id: 'listing_pagination',itemsPerPage: page_size, currentPage: page_number, totalItems: totalRecords}"
+                                                class="data-table align-middle">
+                                                <td>{{ p.nombre }}</td>
+                                                <td><img class="img-table" src="{{ p.imagenUrl }}" alt=""></td>
+                                                <td>{{ p.tipo }}</td>
+                                                <td>{{ p.precio }}</td>
+                                                <td>{{ p.calorias }}</td>
+                                                <td>{{ p.carbohidratos }}</td>
+                                                <td>{{ p.proteinas }}</td>
+                                                <td>{{ p.cantidadDisponible }}</td>
+                                                <td>
+                                                    <a data-bs-toggle="modal"
+                                                        (click)="ShowModal('update', modaladd, p._id)"
+                                                        class="btn bnt-action-table"><i class="fa-solid fa-pen"></i></a>
+                                                    <a data-bs-toggle="modal" class="btn bnt-action-table btn-delete"
+                                                        (click)="DeleteProduct(p._id)"><i
+                                                            class="fa-solid fa-trash"></i></a>
+                                                    <!-- <div class="form-check">
+                                                        <input class="form-check-input input-select" type="checkbox"
+                                                            [value]="'{{ p._id }}'" [(ngModel)]="checkedValue"
+                                                            (change)="SelectRow(p)">
+                                                    </div> -->
+                                                </td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+
+                                    <div class="foote-table mt-3">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="input-group">
+                                                    <select class="form-control-pager form-control-sm page-size-select text-center"
+                                                        [(ngModel)]="page_size">
+                                                        <option *ngFor="let option of pageLimitOptions"
+                                                            [value]="option.value"
+                                                            [selected]="option.value == page_size">
+                                                            {{ option.value }}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 text-end">
+                                                <pagination-controls class="my-pagination" id="listing_pagination" (pageChange)="page_number = $event" previousLabel="" nextLabel=""></pagination-controls>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--MODAL AGREGAR-->
+<ng-template #modaladd let-modaladd id="modaladd">
+    <form #addForm="ngForm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ modalTitle }}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label for="imagenUrl" class="form-label">Imagen</label>
+                        <input type="text" class="form-control i-text-modal" name="imagenUrl" id="imagenUrl"
+                            [(ngModel)]="imagenUrl">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control i-text-modal" name="nombre" id="nombre"
+                            [(ngModel)]="nombre">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <label for="day" class="form-label">Descripción</label>
+                        <textarea class="form-control i-text-modal" id="descripcion" rows="2" name="descripcion"
+                            id="descripcion" [(ngModel)]="descripcion"></textarea>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <label for="tipo" class="form-label">Tipo</label>
+                        <input type="text" class="form-control i-text-modal" name="tipo" id="tipo" [(ngModel)]="tipo">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <label for="dia" class="form-label">Día</label>
+                        <input type="text" class="form-control i-text-modal" name="dia" id="dia" [(ngModel)]="dia">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <label for="precio" class="form-label">Precio</label>
+                        <input type="number" class="form-control i-text-modal" name="precio" id="precio"
+                            [(ngModel)]="precio">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label for="cantidadDisponible" class="form-label">Stock</label>
+                        <input type="number" class="form-control i-text-modal" name="cantidadDisponible"
+                            id="cantidadDisponible" [(ngModel)]="cantidadDisponible">
+                    </div>
+                    <div class="col-6">
+                        <label for="calorias" class="form-label">Calorías</label>
+                        <input type="number" class="form-control i-text-modal" name="calorias" id="calorias"
+                            [(ngModel)]="calorias">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label for="carbohidratos" class="form-label">Carbohidratos</label>
+                        <input type="number" class="form-control i-text-modal" name="carbohidratos" id="carbohidratos"
+                            [(ngModel)]="carbohidratos">
+                    </div>
+                    <div class="col-6">
+                        <label for="proteinas" class="form-label">Proteinas</label>
+                        <input type="number" class="form-control i-text-modal" name="proteinas" id="proteinas"
+                            [(ngModel)]="proteinas">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label for="grasas" class="form-label">Grasas</label>
+                        <input type="number" class="form-control i-text-modal" name="grasas" id="grasas"
+                            [(ngModel)]="grasas">
+                    </div>
+                    <div class="col-6">
+                        <label for="peso" class="form-label">Peso</label>
+                        <input type="number" class="form-control i-text-modal" name="peso" id="peso" [(ngModel)]="peso">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-cancelar form-control"
+                            (click)="modaladd.dismiss()">Cancelar</button>
+                    </div>
+                    <div class="col-6">
+                        <input type="submit" class="btn btn-agregar form-control" (click)="SaveProduct(modaladd)"
+                            value="Agregar">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</ng-template>
