@@ -1,15 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ProductsComponent } from './products/products.component';
+import { ClientsComponent } from './clients/clients.component';
+import { ConfigurationsComponent } from './configurations/configurations.component';
+import { SalesComponent } from './sales/sales.component';
+import { ServiceTypesComponent } from './service-types/service-types.component';
+import { ServicesComponent } from './services/services.component';
+import { UsersComponent } from './users/users.component';
 
 const routes: Routes = [
   {
     path: '',
     children: [
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'products', component: ProductsComponent },
-      { path: '**', redirectTo: 'dashboard' }
+      { path: 'sales', component: SalesComponent},
+      { path: 'clients', component: ClientsComponent},
+      { path: 'services', component: ServicesComponent},
+      { path: 'service-types', component: ServiceTypesComponent},
+      { path: 'users', component: UsersComponent},
+      { path: 'configurations', component: ConfigurationsComponent},
+      { path: '**', redirectTo: 'sales' }
     ]
   }
 ];

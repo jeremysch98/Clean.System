@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import Swal from "sweetalert2";
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
       Swal.fire("", "Complete los campos necesarios. ", "info");
     } else {
       this.authService.validateUser(this.email, this.password).subscribe(r => {
-        if (r.auth) {
+        if (r.message == "true") {
           this.HomeRedirect();
         } else {
           Swal.fire("", "Correo y/o contraseña incorrecta.", "error");
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
   }
 
   HomeRedirect() {
-    this.router.navigate(["home/dashboard"]);
+    this.router.navigate(["home/sales"]);
   }
 
 }

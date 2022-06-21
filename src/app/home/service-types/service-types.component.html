@@ -1,0 +1,183 @@
+<div class="container-fluid">
+    <div class="row">
+        <!-- SIDEBAR -->
+        <div class="col-1 sidebar text-center">
+            <img class="w-100 mt-3" src="../../../assets/img/imagotipo.png" alt="logo">
+            <div class="row mt-5">
+                <div class="col-12">
+                    <a [href]="'home/sales'">
+                        <i class="icon-sidebar fa-solid fa-store"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <a [href]="'home/clients'">
+                        <i class="icon-sidebar fa-solid fa-people-group"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <a [href]="'home/services'">
+                        <i class="icon-sidebar fa-solid fa-rectangle-list"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <a [href]="'home/service-types'">
+                        <i class="icon-sidebar icon-sidebar-active fa-solid fa-tags"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <a [href]="'home/users'">
+                        <i class="icon-sidebar fa-solid fa-clipboard-user"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <a [href]="'home/configurations'">
+                        <i class="icon-sidebar fa-solid fa-user-gear"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- CONTENT -->
+        <div class="col-11 main-content">
+            <div class="row navbar-content">
+                <nav class="navbar navbar-light">
+                    <div class="container-fluid">
+                        <a class="navbar-brand title-h4" [href]="'home/services'">{{title_navbar}}</a>
+                    </div>
+                </nav>
+            </div>
+            <div class="row content p-3">
+                <div class="container">
+                    <div class="card card-table">
+                        <div class="row p-3 mt-2">
+                            <div class="col-5">
+                                <p class="title-h2">{{title_table}}</p>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <div class="search-filter">
+                                        <input type="text" class="form-control input-search"
+                                            placeholder="Buscar servicio" [(ngModel)]="gridFilter">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <a type="button" data-bs-toggle="modal" (click)="ShowModal('create', modaladd)"
+                                            class="btn btn-add form-control"><i class="fa-solid fa-circle-plus"></i>
+                                            Agregar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row p-3">
+                            <div class="col-12">
+                                <table class="table text-center">
+                                    <thead>
+                                        <tr class="align-middle">
+                                            <th>
+                                                <p class="header-table">COD TIPO DE SERVICIO</p>
+                                            </th>
+                                            <th>
+                                                <p class="header-table">TIPO DE SERVICIO</p>
+                                            </th>
+                                            <th>
+                                                <p class="header-table">DESCRIPCIÓN</p>
+                                            </th>
+                                            <th>
+
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let st of service_types | filter:gridFilter | paginates:page_size:page_number | paginate: {id: 'listing_pagination',itemsPerPage: page_size, currentPage: page_number, totalItems: totalRecords}"
+                                            class="data-table align-middle">
+                                            <td>{{ st.idtiposervicio }}</td>
+                                            <td>{{ st.nombre }}</td>
+                                            <td>{{ st.descripcion }}</td>
+                                            <td>
+                                                <a data-bs-toggle="modal" class="btn bnt-action-table"
+                                                    (click)="ShowModal('update', modaladd, st.idtiposervicio)"><i
+                                                        class="fa-solid fa-pen"></i></a>
+                                                <a data-bs-toggle="modal" class="btn bnt-action-table btn-delete"
+                                                    (click)="DeleteServiceType(st.idtiposervicio)"><i class="fa-solid fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="foote-table mt-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                <select
+                                                    class="form-control-pager form-control-sm page-size-select text-center"
+                                                    [(ngModel)]="page_size">
+                                                    <option *ngFor="let option of pageLimitOptions"
+                                                        [value]="option.value" [selected]="option.value == page_size">
+                                                        {{ option.value }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 text-end">
+                                            <pagination-controls class="my-pagination" id="listing_pagination"
+                                                (pageChange)="page_number = $event" previousLabel="" nextLabel="">
+                                            </pagination-controls>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--MODAL-->
+<ng-template #modaladd let-modaladd id="modaladd" aria-hidden="true" data-bs-backdrop="static">
+    <form #addForm="ngForm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ modalTitle }}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label for="nombre" class="form-label">Servicio</label>
+                        <input type="text" class="form-control i-text-modal" name="nombre" id="nombre"
+                            [(ngModel)]="nombre">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control i-text-modal" id="descripcion" rows="3" name="descripcion"
+                            id="descripcion" [(ngModel)]="descripcion"></textarea>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-cancelar form-control"
+                            (click)="CloseModal()">Cancelar</button>
+                    </div>
+                    <div class="col-6">
+                        <input type="submit" class="btn btn-agregar form-control" (click)="SaveServiceType(modaladd)"
+                            value="Guardar">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</ng-template>

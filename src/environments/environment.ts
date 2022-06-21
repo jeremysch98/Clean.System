@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
 
-  pathServices: "http://localhost:3000/"
+  pathServices: "http://localhost:5257/api/"
 };
 
 /*

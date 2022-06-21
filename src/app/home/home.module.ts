@@ -3,8 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { HomeRoutingModule } from './home-routing.module';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ProductsComponent } from './products/products.component';
+import { SalesComponent } from './sales/sales.component';
+import { ClientsComponent } from './clients/clients.component';
+import { ServicesComponent } from './services/services.component';
+import { ServiceTypesComponent } from './service-types/service-types.component';
+import { UsersComponent } from './users/users.component';
+import { ConfigurationsComponent } from './configurations/configurations.component';
 
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
@@ -14,9 +18,13 @@ import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
-    DashboardComponent,
-    ProductsComponent,
     PaginatePipe,
+    SalesComponent,
+    ClientsComponent,
+    ServicesComponent,
+    ServiceTypesComponent,
+    UsersComponent,
+    ConfigurationsComponent,
   ],
   imports: [
     CommonModule,
