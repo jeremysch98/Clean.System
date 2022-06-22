@@ -46,14 +46,14 @@ export class ServiceTypesComponent implements OnInit {
 
   ShowModal(state: string, modaladd: any, idtiposervicio?: any) {
     if (state == "update") {
-      this.modalTitle = "Editar servicio"
+      this.modalTitle = "Editar tipo de servicio"
       this.serviceTypesService.GetById(idtiposervicio).subscribe(r => {
         this.checkedValue = idtiposervicio;
         this.nombre = r.response.nombre;
         this.descripcion = r.response.descripcion;
       });
     } else {
-      this.modalTitle = "Agregar Servicio"
+      this.modalTitle = "Agregar tipo de servicio"
     }
     this.stateForm = state;
     this.modalServices.open(modaladd, { centered: true, size: 'md' });
@@ -74,7 +74,7 @@ export class ServiceTypesComponent implements OnInit {
 
   SaveServiceType(addForm: any) {
     if (this.stateForm == "create") {
-      if (this.nombre.length == 0 || this.descripcion.length == 0 ) {
+      if (this.nombre.length == 0 || this.descripcion.length == 0) {
         Swal.fire("", "Complete los campos necesarios. ", "warning");
       } else {
         this.serviceTypesService.Insert(this.nombre, this.descripcion).subscribe(r => {
@@ -111,7 +111,9 @@ export class ServiceTypesComponent implements OnInit {
     }).then(result => {
       if (result.isConfirmed) {
         this.serviceTypesService.Delete(idtiposervicio).subscribe(r => {
-          if (r) {
+          if (!r) {
+            Swal.fire("", "Este tipo de servicio está en uso, no puede eliminarse.", "warning");
+          } else {
             this.ListServiceTypes();
             Swal.fire("", "Tipo de servicio eliminado correctamente.", "success");
           }
