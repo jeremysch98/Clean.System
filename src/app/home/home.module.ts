@@ -15,6 +15,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 import { PaginatePipe } from '../pipes/paginate.pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { PaymentFormsComponent } from './payment-forms/payment-forms.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ServiceTypesComponent,
     UsersComponent,
     ConfigurationsComponent,
+    PaymentFormsComponent,
   ],
   imports: [
     CommonModule,

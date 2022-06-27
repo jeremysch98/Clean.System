@@ -5,6 +5,10 @@
 export const environment = {
   production: false,
 
+  //AZURE
+  /* pathServices: "https://cleansystemapi.azurewebsites.net/api/" */
+
+  //LOCAL
   pathServices: "http://localhost:5257/api/"
 };
 
