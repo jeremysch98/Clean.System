@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
     } else {
       this.authService.validateUser(this.email, this.password).subscribe(r => {
         if (r.message == "true") {
+          localStorage.setItem("id", r.response.idusuario)
           this.HomeRedirect();
         } else {
           Swal.fire("", "Correo y/o contraseña incorrecta.", "error");
