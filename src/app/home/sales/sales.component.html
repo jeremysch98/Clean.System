@@ -12,13 +12,6 @@
             </div>
             <div class="row mt-4">
                 <div class="col-12">
-                    <a [href]="'home/clients'">
-                        <i class="icon-sidebar fa-solid fa-people-group"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col-12">
                     <a [href]="'home/services'">
                         <i class="icon-sidebar fa-solid fa-rectangle-list"></i>
                     </a>
@@ -58,15 +51,354 @@
             <div class="row navbar-content">
                 <nav class="navbar navbar-light">
                     <div class="container-fluid">
-                        <a class="navbar-brand title-h4" [href]="'home/sales'">Sales</a>
+                        <a class="navbar-brand title-h4" [href]="'home/services'">{{title_navbar}}</a>
                     </div>
                 </nav>
             </div>
-            <div class="row content p-3">
-                <div class="container">
-                    ...
+
+            <!-- MAIN TABLE ORDERS -->
+            <div *ngIf="mainTableOrders">
+                <div class="row content p-3">
+                    <div class="container">
+                        <div class="card card-table">
+                            <div class="row p-3 mt-2">
+                                <div class="col-5">
+                                    <p class="title-h2">{{title_table}}</p>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <div class="search-filter">
+                                            <input type="text" class="form-control input-search"
+                                                placeholder="Buscar pedido" [(ngModel)]="gridFilter">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <a type="button" data-bs-toggle="modal"
+                                                (click)="ShowSubOrderDetails('create')"
+                                                class="btn btn-add form-control"><i class="fa-solid fa-circle-plus"></i>
+                                                Agregar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row p-3">
+                                <div class="col-12">
+                                    <table class="table text-center">
+                                        <thead>
+                                            <tr class="align-middle">
+                                                <th>
+                                                    <p class="header-table">COD PEDIDO</p>
+                                                </th>
+                                                <th>
+                                                    <p class="header-table">FECHA INGRESO</p>
+                                                </th>
+                                                <th>
+                                                    <p class="header-table">FECHA SALIDA</p>
+                                                </th>
+                                                <th>
+                                                    <p class="header-table">DNI CLIENTE</p>
+                                                </th>
+                                                <th>
+                                                    <p class="header-table">NOMBRE CLIENTE</p>
+                                                </th>
+                                                <th>
+                                                    <p class="header-table">USUARIO</p>
+                                                </th>
+                                                <th>
+                                                    <p class="header-table">ESTADO</p>
+                                                </th>
+                                                <th>
+
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let o of orders | filter:gridFilter | paginates:page_size:page_number | paginate: {id: 'listing_pagination',itemsPerPage: page_size, currentPage: page_number, totalItems: totalRecords}"
+                                                class="data-table align-middle">
+                                                <td>{{ o.idpedido }}</td>
+                                                <td>{{ o.fechaingreso | date: 'dd-MM-yyyy'}}</td>
+                                                <td>{{ o.fechasalida | date: 'dd-MM-yyyy'}}</td>
+                                                <td>{{ o.dnicliente }}</td>
+                                                <td>{{ o.nombrecliente }}</td>
+                                                <td>{{ o.oUsuario.nombre }} {{ o.oUsuario.apellido }}</td>
+                                                <td>
+                                                    <p [ngClass]="o.oEstadoPedido.nombre">{{ o.oEstadoPedido.nombre }}
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <a data-bs-toggle="modal" class="btn bnt-action-table"
+                                                        (click)="ShowSubOrderDetails('update', o.idpedido)"><i
+                                                            class="fa-solid fa-pen"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="foote-table mt-3">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="input-group">
+                                                    <select
+                                                        class="form-control-pager form-control-sm page-size-select text-center"
+                                                        [(ngModel)]="page_size">
+                                                        <option *ngFor="let option of pageLimitOptions"
+                                                            [value]="option.value"
+                                                            [selected]="option.value == page_size">
+                                                            {{ option.value }}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 text-end">
+                                                <pagination-controls class="my-pagination" id="listing_pagination"
+                                                    (pageChange)="page_number = $event" previousLabel="" nextLabel="">
+                                                </pagination-controls>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <!-- SUB ORDER DETAILS -->
+            <div *ngIf="subOrderDetails">
+                <div class="row content p-3">
+                    <div class="container">
+                        <form #addForm="ngForm">
+                            <div class="card card-table">
+                                <div class="row p-3 mt-2">
+                                    <div class="col-10">
+                                        <p class="title-h2">{{order_detail_title}}</p>
+                                    </div>
+                                    <div class="col-2">
+                                        <a type="button" class="btn btn-search form-control"
+                                            (click)="ReturnMainTableOrders()"><i class="fa-solid fa-arrow-left"></i>
+                                            Volver</a>
+                                    </div>
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-2">
+                                        <label for="orderIdTemp" class="form-label">Códido Pedido</label>
+                                        <input type="text" class="form-control i-text-modal" name="orderIdTemp"
+                                            id="orderIdTemp" [(ngModel)]="orderIdTemp" disabled>
+                                    </div>
+                                    <div class="col-2">
+                                        <label for="dniCliente" class="form-label">DNI Cliente</label>
+                                        <input type="text" class="form-control i-text-modal" name="dniCliente"
+                                            id="dniCliente" [(ngModel)]="dniCliente" [disabled]="hiddenInput">
+                                    </div>
+                                    <div class="col-2" *ngIf="!hiddenInput">
+                                        <label class="form-label">Buscar Cliente</label>
+                                        <a type="button" class="btn btn-search form-control"
+                                            (click)="SearchClient(dniCliente)"><i
+                                                class="fa-solid fa-magnifying-glass"></i></a>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="nombreCliente" class="form-label">Nombre del Cliente</label>
+                                        <input type="text" class="form-control i-text-modal" name="nombreCliente"
+                                            id="nombreCliente" [(ngModel)]="nombreCliente" [disabled]="hiddenInput" disabled="">
+                                    </div>
+                                </div>
+                                <div class="row p-3 mt-2">
+                                    <div class="col-2">
+                                        <label for="fechaIngreso" class="form-label">Fecha de Ingreso</label>
+                                        <input type="date" class="form-control i-text-modal" name="fechaIngreso"
+                                            id="fechaIngreso" [value]="fechaIngreso | date: 'yyyy-MM-dd' " disabled>
+                                    </div>
+                                    <div class="col-2">
+                                        <label for="fechaSalida" class="form-label">Fecha de Salida</label>
+                                        <input type="date" class="form-control i-text-modal" name="fechaSalida"
+                                            id="fechaSalida" [(ngModel)]="fechaSalida" *ngIf="!hiddenInput">
+                                        <input type="date" class="form-control i-text-modal" name="fechaSalida"
+                                            id="fechaSalida" [value]="fechaSalida | date: 'yyyy-MM-dd' "
+                                            *ngIf="hiddenInput" disabled>
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="idEstadoPedido" class="form-label">Estado de Pedido</label>
+                                        <select class="form-select input-select" name="idEstadoPedido"
+                                            id="idEstadoPedido" [(ngModel)]="idEstadoPedido">
+                                            <option *ngFor="let so of status_order" [value]="so.idestadopedido">
+                                                {{ so.nombre }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="nombreUsario" class="form-label">Usuario</label>
+                                        <input type="text" class="form-control i-text-modal" name="nombreUsario"
+                                            id="nombreUsario" [(ngModel)]="nombreUsuario" disabled="true">
+                                    </div>
+                                    <div class="col-2" *ngIf="!hiddenInput">
+                                        <label class="form-label">Generar Pedido</label>
+                                        <a type="button" class="btn btn-agregar form-control"
+                                            (click)="SaveOrder(addForm)"><i class="fa-solid fa-arrows-rotate"></i></a>
+                                    </div>
+                                    <div class="col-2" *ngIf="hiddenInput">
+                                        <label class="form-label">Guardar</label>
+                                        <a type="button" class="btn btn-agregar form-control"
+                                            (click)="SaveOrder(addForm)"><i class="fa-solid fa-floppy-disk"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div *ngIf="hiddenTableDetallePedido">
+                            <div class="card card-table mt-3">
+                                <div class="row p-3 mt-2">
+                                    <div class="col-8">
+                                        <p class="title-h4">{{title_table_sub}}</p>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <div class="search-filter">
+                                                <input type="text" class="form-control input-search"
+                                                    placeholder="Buscar detalle" [(ngModel)]="gridFilterSub">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <a type="button" data-bs-toggle="modal" class="btn btn-add form-control"
+                                                    (click)="ShowDetailOrderModal('create', modaladdsub)"><i
+                                                        class="fa-solid fa-circle-plus"></i>
+                                                    Agregar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-12">
+                                        <table class="table text-center">
+                                            <thead>
+                                                <tr class="align-middle">
+                                                    <th>
+                                                        <p class="header-table">COD DETALLE</p>
+                                                    </th>
+                                                    <th>
+                                                        <p class="header-table">SERVICIO</p>
+                                                    </th>
+                                                    <th>
+                                                        <p class="header-table">PRECIO</p>
+                                                    </th>
+                                                    <th>
+                                                        <p class="header-table">CANTIDAD</p>
+                                                    </th>
+                                                    <th>
+                                                        <p class="header-table">OBSERVACIÓN</p>
+                                                    </th>
+                                                    <th>
+
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let od of order_details | filter:gridFilterSub | paginates:page_sizeSub:page_numberSub | paginate: {id: 'listing_pagination_sub',itemsPerPage: page_sizeSub, currentPage: page_numberSub, totalItems: totalRecordsSub}"
+                                                    class="data-table align-middle">
+                                                    <td>{{ od.iddetallepedido }}</td>
+                                                    <td>{{ od.oServicio.nombre }}</td>
+                                                    <td>{{ od.oServicio.precio }}</td>
+                                                    <td>{{ od.cantidad }}</td>
+                                                    <td>{{ od.observacion }}</td>
+                                                    <td>
+                                                        <a data-bs-toggle="modal" class="btn bnt-action-table"
+                                                            (click)="ShowDetailOrderModal('update', modaladdsub, od.iddetallepedido)"><i
+                                                                class="fa-solid fa-pen"></i></a>
+                                                        <a data-bs-toggle="modal"
+                                                            class="btn bnt-action-table btn-delete"
+                                                            (click)="DeleteOrderDetail(od.iddetallepedido)"><i
+                                                                class="fa-solid fa-trash"></i></a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="foote-table mt-3">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="input-group">
+                                                        <select
+                                                            class="form-control-pager form-control-sm page-size-select text-center"
+                                                            [(ngModel)]="page_size">
+                                                            <option *ngFor="let option of pageLimitOptions"
+                                                                [value]="option.value"
+                                                                [selected]="option.value == page_size">
+                                                                {{ option.value }}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 text-end">
+                                                    <pagination-controls class="my-pagination"
+                                                        id="listing_pagination_sub"
+                                                        (pageChange)="page_numberSub = $event" previousLabel=""
+                                                        nextLabel="">
+                                                    </pagination-controls>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
+
+<!--MODAL-->
+<ng-template #modaladdsub let-modaladdsub id="modaladdsub" aria-hidden="true" data-bs-backdrop="static">
+    <form #addFormSub="ngForm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{modalTitleSub}}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label for="idServicio" class="form-label">Servicio</label>
+                        <select class="form-select input-select" name="idServicio" id="idServicio"
+                            [(ngModel)]="idServicio" (change)="onSelectService(idServicio)">
+                            <option *ngFor="let s of services" [value]="s.idservicio">
+                                {{ s.nombre }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label for="precioServicio" class="form-label">Precio</label>
+                        <input type="text" class="form-control i-text-modal" name="precioServicio" id="precioServicio"
+                            [(ngModel)]="precioServicio" disabled>
+                    </div>
+                    <div class="col-6">
+                        <label for="cantidad" class="form-label">Cantidad</label>
+                        <input type="text" class="form-control i-text-modal" name="cantidad" id="cantidad"
+                            [(ngModel)]="cantidad">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <label for="observacion" class="form-label">Observación</label>
+                        <textarea class="form-control i-text-modal" id="observacion" rows="3" name="observacion"
+                            [(ngModel)]="observacion"></textarea>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <a type="button" class="btn btn-cancelar form-control" (click)="CloseModal()">Cancelar</a>
+                    </div>
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-agregar form-control"
+                            (click)="SaveOrderDetail(modaladdsub)">Guardar </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</ng-template>

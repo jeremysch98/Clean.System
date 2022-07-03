@@ -206,6 +206,42 @@ a:hover {
     color: var(--white);
 }
 
-.btn-agregar:hover, .btn-cancelar:hover {
+.btn-agregar:hover, .btn-cancelar:hover, .btn-search:hover {
     color: var(--white);
+}
+
+.btn-search {
+    background: var(--grey);
+    color: var(--white);
+}
+
+/* Status order */
+.Pagado {
+    border-radius: 5px;
+    margin: 0;
+    background: #EEE5FF;
+}
+
+.Entregado {
+    border-radius: 5px;
+    margin: 0;
+    background: #C9F7F5;
+}
+
+.En.Proceso {
+    border-radius: 5px;
+    margin: 0;
+    background: #FFF4DE;
+}
+
+.Anulado {
+    border-radius: 5px;
+    margin: 0;
+    background: #FFE2E5;
+}
+
+.Preparado {
+    border-radius: 5px;
+    margin: 0;
+    background: #E9E9ED;
 }
