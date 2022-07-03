@@ -14,6 +14,6 @@ export class ClientsService {
 
   GetByDNI(dni: any): Observable<any> {
     const uri = environment.pathApiPeru.concat("dni/");
-    return this.http.get<any>(uri + dni + "?" + this.token_api_peru)
+    return this.http.get<any>(uri + dni + "?api_token=" + this.token_api_peru)
   };
 }

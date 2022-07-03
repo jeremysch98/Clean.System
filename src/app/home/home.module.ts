@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { HomeRoutingModule } from './home-routing.module';
-import { SalesComponent } from './sales/sales.component';
-import { ClientsComponent } from './clients/clients.component';
+import { SalesComponent, } from './sales/sales.component';
 import { ServicesComponent } from './services/services.component';
 import { ServiceTypesComponent } from './service-types/service-types.component';
 import { UsersComponent } from './users/users.component';
@@ -16,12 +17,11 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { PaginatePipe } from '../pipes/paginate.pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PaymentFormsComponent } from './payment-forms/payment-forms.component';
-
 @NgModule({
+  providers: [DatePipe],
   declarations: [
     PaginatePipe,
     SalesComponent,
-    ClientsComponent,
     ServicesComponent,
     ServiceTypesComponent,
     UsersComponent,

@@ -61,7 +61,7 @@ export class ServicesComponent implements OnInit {
         this.idtiposervicio = r.response.idtiposervicio;
       });
     } else {
-      this.modalTitle = "Agregar Servicio"
+      this.modalTitle = "Agregar servicio"
     }
     this.stateForm = state;
     this.modalServices.open(modaladd, { centered: true, size: 'md' });
