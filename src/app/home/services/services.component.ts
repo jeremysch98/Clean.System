@@ -3,6 +3,8 @@ import { ColumnMode } from '@swimlane/ngx-datatable';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from "sweetalert2";
 import { Router } from '@angular/router';
+import { HtmlToExcel } from "src/app/shared/util/HtmlToExcel";
+import { DatePipe } from '@angular/common';
 
 //services
 import { ServicesService } from 'src/app/core/services/home/services.service';
@@ -11,7 +13,8 @@ import { ServiceTypesService } from 'src/app/core/services/home/service-types.se
 @Component({
   selector: 'app-services',
   templateUrl: './services.component.html',
-  styleUrls: ['./services.component.css']
+  styleUrls: ['./services.component.css'],
+  providers: [DatePipe]
 })
 export class ServicesComponent implements OnInit {
   title_navbar: string = "Servicios"
@@ -26,6 +29,7 @@ export class ServicesComponent implements OnInit {
   page_size: number = 5;
   page_number: number = 1;
   totalRecords: any;
+  HtmlToExcel: HtmlToExcel = new HtmlToExcel()
   public readonly pageLimitOptions = [{ value: 5 }, { value: 7 }];
 
   /*modal*/
@@ -42,6 +46,7 @@ export class ServicesComponent implements OnInit {
 
   constructor(private router: Router,
     private modalServices: NgbModal,
+    private datePipe: DatePipe,
     private servicesService: ServicesService,
     private serviceTypesService: ServiceTypesService) { }
 
@@ -139,6 +144,29 @@ export class ServicesComponent implements OnInit {
         });
       }
     });
+  }
+
+  DownloadServices() {
+    let sBody: string = "";
+		let index: number = 0;
+		sBody += "<tr>";
+		sBody += "<th>COD SERVICIO</th>";
+		sBody += "<th>SERVICIO</th>";
+    sBody += "<th>DESCRIPCIÓN</th>";
+    sBody += "<th>PRECIO (S/.)</th>";
+    sBody += "<th>TIPO DE SERVICIO</th>";
+    sBody += "</tr>";
+		this.services.forEach((l, i) => {
+			index++;
+			sBody += "<tr>";
+			sBody += "<td>" + l.idservicio + "</td>";
+			sBody += "<td>" + l.nombre + "</td>";
+      sBody += "<td>" + l.descripcion + "</td>";
+      sBody += "<td>" + l.precio + "</td>";
+      sBody += "<td>" + l.oTipoServicio.nombre + "</td>";
+			sBody += "</tr>";
+		});
+		this.HtmlToExcel.ExportTOExcel("TableExport", sBody, ("Servicios").concat(" ", this.datePipe.transform(new Date(), 'ddMMyyyy')), "Servicios", "xlsx");
   }
 
 }

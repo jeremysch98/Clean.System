@@ -4,6 +4,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common';
 import Swal from "sweetalert2";
 import { Router } from '@angular/router';
+import { HtmlToExcel } from "src/app/shared/util/HtmlToExcel";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 //services
 import { OrderService } from 'src/app/core/services/home/order.service';
@@ -12,11 +15,14 @@ import { StatusOrderService } from 'src/app/core/services/home/status-order.serv
 import { UsersService } from 'src/app/core/services/home/users.service';
 import { ServicesService } from 'src/app/core/services/home/services.service';
 import { OrderDetailsService } from 'src/app/core/services/home/order-details.service';
+import { PaymentFormsService } from 'src/app/core/services/home/payment-forms.service';
+import { PaymentService } from 'src/app/core/services/home/payment.service';
 
 @Component({
   selector: 'app-sales',
   templateUrl: './sales.component.html',
-  styleUrls: ['./sales.component.css']
+  styleUrls: ['./sales.component.css'],
+  providers: [DatePipe]
 })
 export class SalesComponent implements OnInit {
   title_navbar: string = "Pedidos"
@@ -33,12 +39,22 @@ export class SalesComponent implements OnInit {
   page_number: number = 1;
   totalRecords: any;
   mainTableOrders: boolean = true;
+  HtmlToExcel: HtmlToExcel = new HtmlToExcel()
   public readonly pageLimitOptions = [{ value: 5 }, { value: 7 }];
 
   /*order detail*/
   order_detail_title: string = "";
   hiddenInput: boolean = false;
   hiddenTableDetallePedido: boolean = false;
+  hiddenControls: boolean = true;
+  hiddenButton: boolean = true;
+  hiddenButtonAdd: boolean = true;
+  hiddenButtonConfirm: boolean = true;
+
+  /* payment detail */
+  subTotal: number = 0;
+  IGV: number = 0;
+  total: number = 0;
 
   /*variables*/
   orders: any = [];
@@ -80,6 +96,17 @@ export class SalesComponent implements OnInit {
   observacion: string = "";
   //FIN SUB
 
+  //PAGO INICIO
+  payment_forms: any = [];
+  idFormaPago: any;
+  boleta: any = [];
+  //PAGO FIN
+
+  //BOLETA INICIO
+  hiddenBoleta: boolean = false
+  idOrderInvoice: any = "";
+  //BOLETA FIN
+
   constructor(private router: Router,
     private modalServices: NgbModal,
     private datePipe: DatePipe,
@@ -88,13 +115,16 @@ export class SalesComponent implements OnInit {
     private statusOrderService: StatusOrderService,
     private usersService: UsersService,
     private servicesService: ServicesService,
-    private orderDetailsService: OrderDetailsService) { }
+    private orderDetailsService: OrderDetailsService,
+    private paymentFormsService: PaymentFormsService,
+    private paymentService: PaymentService) { }
 
   ngOnInit(): void {
     this.ValidateRedirect();
     this.ListOrders();
     this.ListStausesOrder();
     this.ListServices();
+    this.ListPaymentForm();
   }
 
   ValidateRedirect() {
@@ -135,6 +165,43 @@ export class SalesComponent implements OnInit {
     this.precioServicio = "";
     this.cantidad = "";
     this.observacion = "";
+    this.order_details = [];
+    this.subTotal = 0;
+    this.total = 0;
+    this.IGV = 0;
+    this.idFormaPago = "";
+    this.hiddenControls = true;
+    this.hiddenButton = true;
+    this.hiddenButtonAdd = true;
+    this.hiddenButtonConfirm = true;
+    this.boleta = []
+  }
+
+  DownloadOrders() {
+    let sBody: string = "";
+		let index: number = 0;
+		sBody += "<tr>";
+		sBody += "<th>COD PEDIDO</th>";
+		sBody += "<th>FECHA INGRESO</th>";
+		sBody += "<th>FECHA SALIDA</th>";
+    sBody += "<th>DNI CLIENTE</th>";
+    sBody += "<th>NOMBRE CLIENTE</th>";
+    sBody += "<th>USUARIO</th>";
+    sBody += "<th>ESTADO</th>";
+    sBody += "</tr>";
+		this.orders.forEach((l, i) => {
+			index++;
+			sBody += "<tr>";
+			sBody += "<td>" + l.idpedido + "</td>";
+			sBody += "<td>" + l.fechaingreso + "</td>";
+			sBody += "<td>" + l.fechasalida + "</td>";
+      sBody += "<td>" + l.dnicliente + "</td>";
+      sBody += "<td>" + l.nombrecliente + "</td>";
+      sBody += "<td>" + l.oUsuario.nombre + " " + l.oUsuario.apellido + "</td>";
+      sBody += "<td>" + l.oEstadoPedido.nombre + "</td>";
+			sBody += "</tr>";
+		});
+		this.HtmlToExcel.ExportTOExcel("TableExport", sBody, ("Pedidos").concat(" ", this.datePipe.transform(new Date(), 'ddMMyyyy')), "Pedidos", "xlsx");
   }
 
   ShowSubOrderDetails(state: string, idPedido?: any) {
@@ -150,6 +217,14 @@ export class SalesComponent implements OnInit {
         this.idEstadoPedido = r.response.idestadopedido;
         this.idUsuario = r.response.idusuario;
         this.nombreUsuario = r.response.oUsuario.nombre + " " + r.response.oUsuario.apellido;
+        this.hiddenControls = false;
+        this.hiddenButtonAdd = false
+        this.hiddenButtonConfirm = false;
+        if (this.idEstadoPedido == 1 || this.idEstadoPedido == 4 || this.idEstadoPedido == null) {
+          this.hiddenButton = true;
+        } else {
+          this.hiddenButton = false;
+        }
       });
       this.hiddenTableDetallePedido = true;
       this.hiddenInput = true;
@@ -163,6 +238,12 @@ export class SalesComponent implements OnInit {
     this.stateForm = state;
     this.subOrderDetails = true;
     this.mainTableOrders = false;
+  }
+
+  SeeInvoice(idPedido: any) {
+    this.idOrderInvoice = idPedido;
+    this.mainTableOrders = false;
+    this.hiddenBoleta = true;
   }
 
   ListUserByID() {
@@ -209,15 +290,15 @@ export class SalesComponent implements OnInit {
       });
     }
   }
-
+  
   ShowDetailOrderModal(statesub: string, modaladdsub: any, iddetalle?: any) {
     if (statesub == "update") {
       this.modalTitleSub = "Editar detalle"
       this.orderDetailsService.GetById(iddetalle).subscribe(r => {
         this.checkedValueSub = iddetalle;
         this.idServicio = r.response.idservicio;
-        this.nombreServicio = r.response.oServicio.nombre;
-        this.precioServicio = r.response.oServicio.precio;
+        this.nombreServicio = r.response.nombre;
+        this.precioServicio = r.response.precio;
         this.cantidad = r.response.cantidad;
         this.observacion = r.response.observacion;
       });
@@ -270,6 +351,12 @@ export class SalesComponent implements OnInit {
   ListOrderDetails() {
     this.orderDetailsService.Get(this.checkedValue).subscribe(r => {
       this.order_details = r.response;
+      for (let st in this.order_details) {
+        this.subTotal += (this.order_details[st].precio * this.order_details[st].cantidad);
+      }
+      this.ListBoleta();
+      this.IGV = this.subTotal * 0.18;
+      this.total = this.subTotal * 1.18;
       this.totalRecordsSub = r.response.length;
     });
   }
@@ -289,6 +376,8 @@ export class SalesComponent implements OnInit {
       } else {
         this.orderDetailsService.Insert(this.idServicio, this.checkedValue, this.nombreServicio, this.precioServicio, this.cantidad, this.observacion).subscribe(r => {
           if (r.message) {
+            this.subTotal = 0;
+            this.total = 0;
             this.ListOrderDetails();
             this.modalServices.dismissAll();
             this.idServicio = "";
@@ -296,14 +385,18 @@ export class SalesComponent implements OnInit {
             this.precioServicio = "";
             this.cantidad = "";
             this.observacion = "";
+            /* this.order_details = []; */
             Swal.fire("", r.message, "success");
           }
         })
       }
     }
-    if (this.stateForm == "update") {
-      this.orderDetailsService.Update(this.checkedValueSub, this.idServicio, this.checkedValue, this.nombreCliente, this.precioServicio, this.cantidad, this.observacion).subscribe(r => {
+    if (this.stateFormSub == "update") {
+      console.log(this.checkedValueSub);
+      this.orderDetailsService.Update(this.checkedValueSub, this.idServicio, this.checkedValue, this.nombreServicio, this.precioServicio, this.cantidad, this.observacion).subscribe(r => {
         if (r.message) {
+          this.subTotal = 0;
+          this.total = 0;
           this.ListOrderDetails();
           this.modalServices.dismissAll();
           this.idServicio = "";
@@ -311,6 +404,7 @@ export class SalesComponent implements OnInit {
           this.precioServicio = "";
           this.cantidad = "";
           this.observacion = "";
+          /* this.order_details = []; */
           Swal.fire("", r.message, "success");
         }
       })
@@ -328,12 +422,44 @@ export class SalesComponent implements OnInit {
       if (result.isConfirmed) {
         this.orderDetailsService.Delete(iddetallepedido).subscribe(r => {
           if (r) {
+            this.subTotal = 0;
+            this.total = 0;
             this.ListOrderDetails();
             Swal.fire("", "Detalle eliminado correctamente.", "success");
           }
         });
       }
     });
+  }
+
+  ListPaymentForm() {
+    this.paymentFormsService.Get().subscribe(r => {
+      this.payment_forms = r.response;
+      console.log(r.response)
+    });
+  }
+
+  ListBoleta() {
+    this.paymentService.GetByIdPedido(this.checkedValue).subscribe(r => {
+      this.boleta = r.response;
+      this.idFormaPago = this.boleta[0].idformapago;
+    });
+  }
+
+  ConfirmOrder(confirmForm: any) {
+    if (this.idFormaPago == null) {
+      Swal.fire("", "Seleccione una forma de pago.", "warning");
+    } else {
+      this.paymentService.Insert(this.fechaIngreso, this.subTotal, this.IGV, this.total, this.idFormaPago, this.checkedValue).subscribe(r => {
+        if (r.message) {
+          this.hiddenButton = false
+          this.hiddenControls = false;
+          this.hiddenButtonAdd = false;
+          Swal.fire("", "El pedido se ha confirmado correctamente.", "success");
+          console.log("Exportando boleta...")
+        }
+      });
+    }
   }
 
 }

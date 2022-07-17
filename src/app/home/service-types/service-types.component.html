@@ -62,15 +62,25 @@
                             <div class="col-5">
                                 <p class="title-h2">{{title_table}}</p>
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <div class="search-filter">
                                         <input type="text" class="form-control input-search"
-                                            placeholder="Buscar servicio" [(ngModel)]="gridFilter">
+                                            placeholder="Buscar tipo de servicio" [(ngModel)]="gridFilter">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-2">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <a type="button" data-bs-toggle="modal"
+                                            (click)="DownloadServiceTypes()"
+                                            class="btn btn-add form-control"><i class="fa-solid fa-download"></i>
+                                            Descargar</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
                                 <div class="row">
                                     <div class="col-12">
                                         <a type="button" data-bs-toggle="modal" (click)="ShowModal('create', modaladd)"
@@ -181,3 +191,6 @@
         </div>
     </form>
 </ng-template>
+
+<table id="TableExport" style="display: none;">
+</table>

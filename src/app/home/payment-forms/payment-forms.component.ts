@@ -3,6 +3,8 @@ import { ColumnMode } from '@swimlane/ngx-datatable';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from "sweetalert2";
 import { Router } from '@angular/router';
+import { HtmlToExcel } from "src/app/shared/util/HtmlToExcel";
+import { DatePipe } from '@angular/common';
 
 //services
 import { PaymentFormsService } from 'src/app/core/services/home/payment-forms.service';
@@ -10,7 +12,8 @@ import { PaymentFormsService } from 'src/app/core/services/home/payment-forms.se
 @Component({
   selector: 'app-payment-forms',
   templateUrl: './payment-forms.component.html',
-  styleUrls: ['./payment-forms.component.css']
+  styleUrls: ['./payment-forms.component.css'],
+  providers: [DatePipe]
 })
 export class PaymentFormsComponent implements OnInit {
   title_navbar: string = "Formas de Pago"
@@ -25,6 +28,7 @@ export class PaymentFormsComponent implements OnInit {
   page_size: number = 5;
   page_number: number = 1;
   totalRecords: any;
+  HtmlToExcel: HtmlToExcel = new HtmlToExcel()
   public readonly pageLimitOptions = [{ value: 5 }, { value: 7 }];
 
   /*modal*/
@@ -37,6 +41,7 @@ export class PaymentFormsComponent implements OnInit {
 
   constructor(private router: Router,
     private modalServices: NgbModal,
+    private datePipe: DatePipe,
     private paymentFormsService: PaymentFormsService,) { }
 
   ngOnInit(): void {
@@ -115,6 +120,23 @@ export class PaymentFormsComponent implements OnInit {
         });
       }
     });
+  }
+
+  DownloadPaymentForms() {
+    let sBody: string = "";
+		let index: number = 0;
+		sBody += "<tr>";
+		sBody += "<th>COD FORMA DE PAGO</th>";
+		sBody += "<th>FORMA DE PAGO</th>";
+    sBody += "</tr>";
+		this.payment_forms.forEach((l, i) => {
+			index++;
+			sBody += "<tr>";
+			sBody += "<td>" + l.idformapago + "</td>";
+			sBody += "<td>" + l.nombre + "</td>";
+			sBody += "</tr>";
+		});
+		this.HtmlToExcel.ExportTOExcel("TableExport", sBody, ("Formas de Pago").concat(" ", this.datePipe.transform(new Date(), 'ddMMyyyy')), "Formas de Pago", "xlsx");
   }
 
 }

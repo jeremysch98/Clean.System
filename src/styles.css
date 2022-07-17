@@ -213,6 +213,8 @@ a:hover {
 .btn-search {
     background: var(--grey);
     color: var(--white);
+    border-radius: 5px;
+    font-size: 14px;
 }
 
 /* Status order */
