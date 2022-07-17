@@ -6,13 +6,13 @@ export const environment = {
   production: false,
 
   //AZURE
-  /* pathServices: "https://cleansystemapi.azurewebsites.net/api/", */
+  pathServices: "https://cleansystemapi.azurewebsites.net/api/",
 
   //API PERU
   pathApiPeru: "https://apiperu.dev/api/",
 
   //LOCAL
-  pathServices: "http://localhost:5257/api/"
+  /* pathServices: "http://localhost:5257/api/" */
 };
 
 /*

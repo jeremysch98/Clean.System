@@ -17,6 +17,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { PaginatePipe } from '../pipes/paginate.pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PaymentFormsComponent } from './payment-forms/payment-forms.component';
+import { BoletaComponent } from './boleta/boleta.component';
 @NgModule({
   providers: [DatePipe],
   declarations: [
@@ -27,6 +28,7 @@ import { PaymentFormsComponent } from './payment-forms/payment-forms.component';
     UsersComponent,
     ConfigurationsComponent,
     PaymentFormsComponent,
+    BoletaComponent,
   ],
   imports: [
     CommonModule,

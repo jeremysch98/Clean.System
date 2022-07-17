@@ -51,11 +51,10 @@
             <div class="row navbar-content">
                 <nav class="navbar navbar-light">
                     <div class="container-fluid">
-                        <a class="navbar-brand title-h4" [href]="'home/services'">{{title_navbar}}</a>
+                        <a class="navbar-brand title-h4" [href]="'home/sales'">{{title_navbar}}</a>
                     </div>
                 </nav>
             </div>
-
             <!-- MAIN TABLE ORDERS -->
             <div *ngIf="mainTableOrders">
                 <div class="row content p-3">
@@ -65,7 +64,7 @@
                                 <div class="col-5">
                                     <p class="title-h2">{{title_table}}</p>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-3">
                                     <div class="form-group">
                                         <div class="search-filter">
                                             <input type="text" class="form-control input-search"
@@ -73,7 +72,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <a type="button" data-bs-toggle="modal" (click)="DownloadOrders()"
+                                                class="btn btn-add form-control"><i class="fa-solid fa-download"></i>
+                                                Descargar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2">
                                     <div class="row">
                                         <div class="col-12">
                                             <a type="button" data-bs-toggle="modal"
@@ -132,6 +140,8 @@
                                                     <a data-bs-toggle="modal" class="btn bnt-action-table"
                                                         (click)="ShowSubOrderDetails('update', o.idpedido)"><i
                                                             class="fa-solid fa-pen"></i></a>
+                                                    <a class="btn bnt-action-boleta" (click)="SeeInvoice(o.idpedido)"><i
+                                                            class="fa-solid fa-file-lines"></i></a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -201,7 +211,7 @@
                                     <div class="col-6">
                                         <label for="nombreCliente" class="form-label">Nombre del Cliente</label>
                                         <input type="text" class="form-control i-text-modal" name="nombreCliente"
-                                            id="nombreCliente" [(ngModel)]="nombreCliente" [disabled]="hiddenInput" disabled="">
+                                            id="nombreCliente" [(ngModel)]="nombreCliente" [disabled]="hiddenInput">
                                     </div>
                                 </div>
                                 <div class="row p-3 mt-2">
@@ -221,7 +231,7 @@
                                     <div class="col-3">
                                         <label for="idEstadoPedido" class="form-label">Estado de Pedido</label>
                                         <select class="form-select input-select" name="idEstadoPedido"
-                                            id="idEstadoPedido" [(ngModel)]="idEstadoPedido">
+                                            id="idEstadoPedido" [(ngModel)]="idEstadoPedido" [disabled]="!hiddenButton">
                                             <option *ngFor="let so of status_order" [value]="so.idestadopedido">
                                                 {{ so.nombre }}
                                             </option>
@@ -233,14 +243,16 @@
                                             id="nombreUsario" [(ngModel)]="nombreUsuario" disabled="true">
                                     </div>
                                     <div class="col-2" *ngIf="!hiddenInput">
-                                        <label class="form-label">Generar Pedido</label>
+                                        <label class="form-label" *ngIf="hiddenButton">Generar Pedido</label>
                                         <a type="button" class="btn btn-agregar form-control"
-                                            (click)="SaveOrder(addForm)"><i class="fa-solid fa-arrows-rotate"></i></a>
+                                            (click)="SaveOrder(addForm)" *ngIf="hiddenButton"><i
+                                                class="fa-solid fa-arrows-rotate"></i></a>
                                     </div>
                                     <div class="col-2" *ngIf="hiddenInput">
-                                        <label class="form-label">Guardar</label>
+                                        <label class="form-label" *ngIf="hiddenButton">Guardar</label>
                                         <a type="button" class="btn btn-agregar form-control"
-                                            (click)="SaveOrder(addForm)"><i class="fa-solid fa-floppy-disk"></i></a>
+                                            (click)="SaveOrder(addForm)" *ngIf="hiddenButton"><i
+                                                class="fa-solid fa-floppy-disk"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -263,8 +275,8 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <a type="button" data-bs-toggle="modal" class="btn btn-add form-control"
-                                                    (click)="ShowDetailOrderModal('create', modaladdsub)"><i
-                                                        class="fa-solid fa-circle-plus"></i>
+                                                    (click)="ShowDetailOrderModal('create', modaladdsub)"
+                                                    *ngIf="hiddenButtonAdd"><i class="fa-solid fa-circle-plus"></i>
                                                     Agregar</a>
                                             </div>
                                         </div>
@@ -299,18 +311,18 @@
                                                 <tr *ngFor="let od of order_details | filter:gridFilterSub | paginates:page_sizeSub:page_numberSub | paginate: {id: 'listing_pagination_sub',itemsPerPage: page_sizeSub, currentPage: page_numberSub, totalItems: totalRecordsSub}"
                                                     class="data-table align-middle">
                                                     <td>{{ od.iddetallepedido }}</td>
-                                                    <td>{{ od.oServicio.nombre }}</td>
-                                                    <td>{{ od.oServicio.precio }}</td>
+                                                    <td>{{ od.nombre }}</td>
+                                                    <td>{{ od.precio }}</td>
                                                     <td>{{ od.cantidad }}</td>
                                                     <td>{{ od.observacion }}</td>
                                                     <td>
                                                         <a data-bs-toggle="modal" class="btn bnt-action-table"
-                                                            (click)="ShowDetailOrderModal('update', modaladdsub, od.iddetallepedido)"><i
-                                                                class="fa-solid fa-pen"></i></a>
+                                                            (click)="ShowDetailOrderModal('update', modaladdsub, od.iddetallepedido)"
+                                                            *ngIf="hiddenControls"><i class="fa-solid fa-pen"></i></a>
                                                         <a data-bs-toggle="modal"
                                                             class="btn bnt-action-table btn-delete"
-                                                            (click)="DeleteOrderDetail(od.iddetallepedido)"><i
-                                                                class="fa-solid fa-trash"></i></a>
+                                                            (click)="DeleteOrderDetail(od.iddetallepedido)"
+                                                            *ngIf="hiddenControls"><i class="fa-solid fa-trash"></i></a>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -343,9 +355,83 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-7"></div>
+                            <div class="col-5">
+                                <div *ngIf="hiddenTableDetallePedido">
+                                    <div class="card card-table mt-3">
+                                        <div class="row p-3 mt-2">
+                                            <div class="col-8">
+                                                <p class="title-h4">Detalle de pago</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="row p-3">
+                                                    <div class="col-md-7">
+                                                        Sub-total:
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        {{subTotal | number: '1.2-2'}}
+                                                    </div>
+                                                </div>
+                                                <div class="row p-3">
+                                                    <div class="col-md-7">
+                                                        IGV (18%):
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        {{IGV | number: '1.2-2'}}
+                                                    </div>
+                                                </div>
+                                                <div class="row p-3">
+                                                    <div class="col-md-7">
+                                                        Total:
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        {{total | number: '1.2-2'}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <form #confirmForm="ngForm">
+                                                    <div class="row p-3">
+                                                        <div class="col-md-4">
+                                                            <label for="idFormaPago" class="form-label">Forma
+                                                                Pago:</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <select class="form-select input-select" name="idFormaPago"
+                                                                id="idFormaPago" [(ngModel)]="idFormaPago"
+                                                                [disabled]="!hiddenControls">
+                                                                <option *ngFor="let pm of payment_forms"
+                                                                    [value]="pm.idformapago">
+                                                                    {{ pm.nombre }}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row p-3">
+                                                        <div class="col-md-12" *ngIf="hiddenButtonConfirm">
+                                                            <a type="button" class="btn btn-agregar form-control"
+                                                                (click)="ConfirmOrder(confirmForm)"><i
+                                                                    class="fa-solid fa-check"></i> Confirmar Pedido</a>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
+            <!-- INVOICE -->
+            <div *ngIf="hiddenBoleta">
+                <app-boleta [idPedido]="idOrderInvoice"></app-boleta>
             </div>
         </div>
     </div>
@@ -395,10 +481,13 @@
                     </div>
                     <div class="col-6">
                         <button type="submit" class="btn btn-agregar form-control"
-                            (click)="SaveOrderDetail(modaladdsub)">Guardar </button>
+                            (click)="SaveOrderDetail(modaladdsub)">Guardar</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
 </ng-template>
+
+<table id="TableExport" style="display: none;">
+</table>
